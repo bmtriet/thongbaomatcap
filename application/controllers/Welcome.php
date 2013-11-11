@@ -45,18 +45,6 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->library('geocoder/geocoder');
-
-		$ip_address = '123.24.110.171';
-		// $ip_address = $this->input->ip_address();
-		
-		$geocode = $this->geocoder->lookup($ip_address);
-
-		var_dump( $geocode->record() );
-		// var_dump( $geocode->timezone() );
-		// var_dump( $geocode->country_name() );
-		// ...
-
 		$this->load->view('welcome_message');
 	}
 	

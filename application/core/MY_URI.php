@@ -10,9 +10,11 @@ class MY_URI extends CI_URI {
 			$CI->load->helper('string');
 		}
 
+		$uri_string = ($this->uri_string() !== '') ? $this->uri_string() : '/';
+
 		foreach (func_get_args() as $pattern)
 		{
-			if (str_is($pattern, $this->uri_string()))
+			if ( str_is($pattern, $uri_string) )
 			{
 				return true;
 			}
