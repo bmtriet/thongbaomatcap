@@ -4,7 +4,7 @@ Mã nguồn thongbaomatcap.info
 
 Là một dự án phi lợi nhuận và được viết trên framework CodeIgniter v3.x-dev.
 
-Dự án đang trong giai đoạn phát triển ban đầu, mã nguồn được công khai trên github nên mọi lập trình viên đều có thể đóng góp nó hoàn thiện hơn
+Dự án đang trong giai đoạn phát triển ban đầu, mã nguồn được công khai trên github nên mọi lập trình viên đều có thể đóng góp nó hoàn thiện hơn.
 
 Todo-list
 ---------------------
@@ -27,50 +27,57 @@ Hiện tại 4 lớp được kế thừa,  mở rộng thêm  `*`
 - `MY_Model`
 - `REST_Controller`
 
-####- Lớp MY_URI
+####Lớp MY_URI
 Tích hợp thêm phương thức `is([$pattern])` chấp nhận một đối số truyền vào là 1 biểu thức mẫu.
 
 Phương thức này sẽ trả về boolean nếu biểu thức truyền vào "giống" với địa chỉ URL hiện tại. Sử dụng `*` tương đương với bất kỳ ký tự nào.
 
+Truyền vào một chuỗi
 ```php
-// Truyền vào một chuỗi
 if ( $this->uri->is('admin/*') )
 {
     // ...
 }
+```
 
-// Hoặc sử dụng một mảng truyền vào 
+Hoặc sử dụng một mảng truyền vào 
+```php
 if ( $this->uri->is(array('admin/user*', 'admin/group*')) )
 {
     // ...
 }
 ```
 
-####- Lớp MY_Input
+####Lớp MY_Input
 Bổ sung thêm phương thức `input([$type], [$xss_clean = FALSE])` chấp nhận 2 đối số truyền vào. Trả về lớp `Input_Data`.
 
 - `$type` bắt buộc là `get` hoặc `post`. 
 - `$xss_clean` có bật xss-clean dữ liệu không?
 
-Dưới đây từ `input` đuợc coi như `$_GET` hoặc `$_POST`
+(*Dưới đây từ `input` đuợc coi như `$_GET` hoặc `$_POST`*)
+
+Lấy tất cả input hiện có.
 ```php
-// Lấy tất cả input hiện có.
-$this->input->input('get')->all();
-
-// Kiểm tra xem input có tồn tại?
-if ( $this->input->input('get')->has('page') ) {}
-
-// Lấy một giá trị từ input
-// Tuơng tự như $this->input->get('page');
+$data = $this->input->input('get')->all();
+```
+Kiểm tra xem input có tồn tại?
+```php
+if ( $this->input->input('get')->has('page') )
+{
+    //...
+}
+```
+Lấy một giá trị từ input. Tuơng tự như `$this->input->get('page')`;
+```php
 $page = $this->input->input('get')->get('page');
-
-// Chỉ lấy những key này từ input
-$this->input->input('post')->only(array('page', 'start', 'limit'));
-// $this->input->input('post')->only('page', 'start', 'limit');
-
-// Lấy tất cả input ngoại trừ những key
-$this->input->input('post')->except(array('captcha', 'csrf_token'));
-// $this->input->input('post')->except('captcha', 'csrf_token');
+```
+Chỉ lấy những key này từ input
+```php
+$data = $this->input->input('post')->only(array('page', 'start', 'limit'));
+```
+Lấy tất cả input ngoại trừ những key
+```php
+$data = $this->input->input('post')->except(array('captcha', 'csrf_token'));
 ```
 
 Giấy phép
