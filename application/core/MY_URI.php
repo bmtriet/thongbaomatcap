@@ -2,7 +2,7 @@
 
 class MY_URI extends CI_URI {
 
-	public function is($pattern)
+	public function is($patterns)
 	{
 		if ( ! function_exists('str_is') )
 		{
@@ -11,8 +11,9 @@ class MY_URI extends CI_URI {
 		}
 
 		$uri_string = ($this->uri_string() !== '') ? $this->uri_string() : '/';
+		$patterns = is_array($patterns) ? $patterns : func_get_args();
 
-		foreach (func_get_args() as $pattern)
+		foreach ($patterns as $pattern)
 		{
 			if ( str_is($pattern, $uri_string) )
 			{
