@@ -2,8 +2,6 @@
 
 class Home extends MY_Controller {
 
-	protected $libraries = array('form', 'geocoder');
-
 	public function index()
 	{
 		return $this->template->build('home/index');

@@ -33,15 +33,9 @@ class Geocoder {
 	 * @param [type] $dat_file  [description]
 	 * @param [type] $open_flag [description]
 	 */
-	public function __construct($dat_file = NULL, $open_flag = NULL)
+	public function __construct( array $config = array() )
 	{
-		$this->CI =& get_instance();
-		$this->CI->load->config('geocoder', TRUE);
-
-		$dat_file = $this->CI->config->item('dat_file', 'geocoder');
-		$open_flag = $this->CI->config->item('open_flag', 'geocoder');
-
-		$this->initialize($dat_file, $open_flag);
+		$this->initialize($config['dat_file'], $config['open_flag']);
 	}
 
 	/**
