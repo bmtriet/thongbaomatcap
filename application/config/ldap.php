@@ -18,4 +18,3 @@ $config['port'] = NULL;
  */
 
 $config['timeout'] = 5;
-?>

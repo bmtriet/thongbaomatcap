@@ -2,6 +2,8 @@
 
 class Home extends MY_Controller {
 
+	protected $libraries = array('hybridauth');
+
 	public function index()
 	{
 		return $this->template->build('home/index');
