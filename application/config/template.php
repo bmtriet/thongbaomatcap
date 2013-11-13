@@ -13,7 +13,7 @@
 |
 */
 
-$config['parser_enabled'] = TRUE;
+$config['parser_enabled'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ $config['parser_body_enabled'] = FALSE;
 |
 */
 
-$config['title_separator'] = ' | ';
+$config['title_separator'] = ' - ';
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +84,4 @@ $config['theme'] = '';
 |
 */
 
-$config['theme_locations'] = array(
-	APPPATH.'themes/'
-);
+$config['theme_locations'] = array(APPPATH.'themes/');
