@@ -2,7 +2,7 @@
 
 class Home extends MY_Controller {
 
-	protected $libraries = array('form');
+	protected $libraries = array('form', 'geocoder');
 
 	public function index()
 	{

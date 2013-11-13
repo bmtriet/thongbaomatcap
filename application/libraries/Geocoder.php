@@ -1,8 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once dirname(__FILE__) . '/src/geoipcity.inc';
-require_once dirname(__FILE__) . '/src/timezone.php';
-require_once dirname(__FILE__) . '/Geocoder_Result.php';
+require_once APPPATH . 'third_party/geoip/src/geoipcity.inc';
+require_once APPPATH . 'third_party/geoip/src/timezone.php';
+require_once APPPATH . 'third_party/geoip/Geocoder_Result.php';
 
 class Geocoder {
 
@@ -53,7 +53,7 @@ class Geocoder {
 	 */
 	public function initialize($dat_file, $open_flag = NULL)
 	{
-		$this->dat_file = is_file($dat_file) ? $dat_file : dirname(__FILE__) . '/data/GeoLiteCity.dat';
+		$this->dat_file = is_file($dat_file) ? $dat_file : APPPATH . 'third_party/geoip/data/GeoLiteCity.dat';
 		$this->open_flag = null === $open_flag ? GEOIP_STANDARD : $open_flag;
 	}
 
@@ -65,7 +65,7 @@ class Geocoder {
 	 */
 	public function lookup($ip_address = NULL)
 	{
-		$ip_address = is_null($ip_address) ? $this->CI->input->ip_address() : $ip_address;
+		$ip_address = is_null($ip_address) ? $this->CI->input->ip_address() : trim($ip_address);
 
 		if (false === filter_var($ip_address, FILTER_VALIDATE_IP))
 		{
