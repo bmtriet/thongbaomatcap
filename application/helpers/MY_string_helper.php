@@ -94,7 +94,7 @@ if ( ! function_exists('ends_with') )
 			if ($needle == substr($haystack, strlen($haystack) - strlen($needle))) return TRUE;
 		}
 
-		return false;
+		return FALSE;
 	}
 }
 
@@ -111,10 +111,10 @@ if ( ! function_exists('contains') )
 	{
 		foreach ((array) $needle as $n)
 		{
-			if (strpos($haystack, $n) !== false) return TRUE;
+			if (strpos($haystack, $n) !== FALSE) return TRUE;
 		}
 
-		return false;
+		return FALSE;
 	}
 }
 

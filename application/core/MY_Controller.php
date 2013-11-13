@@ -1,8 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . '/core/Auth_Controller.php';
-require APPPATH . '/core/REST_Controller.php';
-
 class MY_Controller extends CI_Controller {
 
 	/**

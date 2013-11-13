@@ -3,6 +3,15 @@
 class MY_Input extends CI_Input {
 
 	/**
+	 * [__construct description]
+	 * 
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
+	/**
 	 * [input description]
 	 * 
 	 * @param  [type]  $type      [description]
