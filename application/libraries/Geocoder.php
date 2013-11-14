@@ -58,7 +58,8 @@ class Geocoder {
 	 */
 	public function lookup($ip_address = NULL)
 	{
-		$ip_address = is_null($ip_address) ? $this->CI->input->ip_address() : trim($ip_address);
+		$CI =& get_instance();
+		$ip_address = is_null($ip_address) ? $CI->input->ip_address() : trim($ip_address);
 
 		if (false === filter_var($ip_address, FILTER_VALIDATE_IP))
 		{

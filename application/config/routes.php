@@ -74,9 +74,12 @@
 |		my-controller/my-method	-> my_controller/my_method
 */
 
-$route['dang-nhap'] = 'auth/login';
+// User route
+$route['login'] = 'user/login';
+$route['register'] = 'user/register';
+$route['forgot-pass'] = 'user/forgot-pass';
 
-$route['default_controller'] = 'trang-chu';
+$route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = TRUE;
 

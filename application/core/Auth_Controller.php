@@ -3,11 +3,12 @@
 class Auth_Controller extends MY_Controller {
 
 	/**
-	 * [$ignore_page description]
+	 * Nhung URI co the bo qua kiem tra dang nhap
+	 * Co the dung bieu thuc trong ham str_is
 	 * 
 	 * @var array
 	 */
-	protected $ignore_page = array('login');
+	protected $ignore_page = array();
 	
 	/**
 	 * [__construct description]

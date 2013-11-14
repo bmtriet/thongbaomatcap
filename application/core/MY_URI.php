@@ -15,6 +15,13 @@ class MY_URI extends CI_URI {
 
 		foreach ($patterns as $pattern)
 		{
+			// Sua rac roi khi su dung translate_uri_dashes.
+			// Truy cap vao domain.com/forgot-pass 
+			// voi domain.com/forgot_pass la nhu nhau.
+			// Vi vay chuyen chung ve lam mot.
+			$pattern = str_replace('-', '_', $pattern);
+			$uri_string = str_replace('-', '_', $uri_string);
+
 			if ( str_is($pattern, $uri_string) )
 			{
 				return true;
