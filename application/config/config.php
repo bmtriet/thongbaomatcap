@@ -445,13 +445,20 @@ $config['proxy_ips'] = '';
 */
 function __autoload($class)
 {
-	if ( preg_match('#^.*_Controller\z#', $class) &&
-		file_exists(APPPATH . 'core/'. $class .'.php') )
+	$autoload = array(
+		'_Controller' => 'core',
+		'_Interface'  => 'controllers/Interfaces'
+	);
+
+	foreach ($autoload as $pattern => $directory )
 	{
-		include_once(APPPATH . 'core/'. $class .'.php');
+		if ( preg_match('#^.*'.$pattern.'\z#', $class) &&
+			file_exists($class_path = APPPATH . $directory . '/'. $class .'.php') )
+		{
+			include_once $class_path;
+		}
 	}
 }
-
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
