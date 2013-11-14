@@ -2,15 +2,15 @@
 
 class Social extends MY_Controller {
 
-	protected $libraries = array('hybridauthlib');
+	protected $libraries = array('hybridauth');
 
 	public function index()
 	{
 		// Send to the view all permitted services as a user profile if authenticated
-		$data['providers'] = $this->hybridauthlib->getProviders();
+		$data['providers'] = $this->hybridauth->getProviders();
 		foreach($data['providers'] as $provider=>$d) {
 			if ($d['connected'] == 1) {
-				$data['providers'][$provider]['user_profile'] = $this->hybridauthlib->authenticate($provider)->getUserProfile();
+				$data['providers'][$provider]['user_profile'] = $this->hybridauth->authenticate($provider)->getUserProfile();
 			}
 		}
 		$this->load->view('hauth/home', $data);
@@ -22,13 +22,13 @@ class Social extends MY_Controller {
 
 		try
 		{
-			log_message('debug', 'controllers.HAuth.login: loading HybridAuthLib');
+			log_message('debug', 'controllers.HAuth.login: loading hybridauth');
 
 
-			if ($this->hybridauthlib->providerEnabled($provider))
+			if ($this->hybridauth->providerEnabled($provider))
 			{
 				log_message('debug', "controllers.HAuth.login: service $provider enabled, trying to authenticate.");
-				$service = $this->hybridauthlib->authenticate($provider);
+				$service = $this->hybridauth->authenticate($provider);
 
 				if ($service->isUserConnected())
 				{
@@ -93,11 +93,11 @@ class Social extends MY_Controller {
 
 				log_message('debug', "controllers.HAuth.logout() called, no provider specified. Logging out of all services.");
 				$data['service'] = "all";
-				$this->hybridauthlib->logoutAllProviders();
+				$this->hybridauth->logoutAllProviders();
 			} else {
-				if ($this->hybridauthlib->providerEnabled($provider)) {
+				if ($this->hybridauth->providerEnabled($provider)) {
 					log_message('debug', "controllers.HAuth.logout: service $provider enabled, trying to check if user is authenticated.");
-					$service = $this->hybridauthlib->authenticate($provider);
+					$service = $this->hybridauth->authenticate($provider);
 
 					if ($service->isUserConnected()) {
 						log_message('debug', 'controller.HAuth.logout: user is authenticated, logging out.');
@@ -160,19 +160,19 @@ class Social extends MY_Controller {
 		{
 			if ($provider == "") {
 				log_message('debug', "controllers.HAuth.status($provider) called, no provider specified. Providing details on all connected services.");
-				$connected = $this->hybridauthlib->getConnectedProviders();
+				$connected = $this->hybridauth->getConnectedProviders();
 
 				if (count($connected) == 0) {
 					$data['status'] = "User not authenticated.";
 				} else {
-					$connected = $this->hybridauthlib->getConnectedProviders();
+					$connected = $this->hybridauth->getConnectedProviders();
 					foreach($connected as $provider) {
-						if ($this->hybridauthlib->providerEnabled($provider)) {
+						if ($this->hybridauth->providerEnabled($provider)) {
 							log_message('debug', "controllers.HAuth.status: service $provider enabled, trying to check if user is authenticated.");
-							$service = $this->hybridauthlib->authenticate($provider);
+							$service = $this->hybridauth->authenticate($provider);
 							if ($service->isUserConnected()) {
 								log_message('debug', 'controller.HAuth.status: user is authenticated to $provider, providing profile.');
-								$data['status'][$provider] = (array)$this->hybridauthlib->getAdapter($provider)->getUserProfile();
+								$data['status'][$provider] = (array)$this->hybridauth->getAdapter($provider)->getUserProfile();
 							} else { // Cannot authenticate user
 								$data['status'][$provider] = "User not authenticated.";
 							}
@@ -183,12 +183,12 @@ class Social extends MY_Controller {
 					}
 				}
 			} else {
-				if ($this->hybridauthlib->providerEnabled($provider)) {
+				if ($this->hybridauth->providerEnabled($provider)) {
 					log_message('debug', "controllers.HAuth.status: service $provider enabled, trying to check if user is authenticated.");
-					$service = $this->hybridauthlib->authenticate($provider);
+					$service = $this->hybridauth->authenticate($provider);
 					if ($service->isUserConnected()) {
 						log_message('debug', 'controller.HAuth.status: user is authenticated to $provider, providing profile.');
-						$data['status'][$provider] = (array)$this->hybridauthlib->getAdapter($provider)->getUserProfile();
+						$data['status'][$provider] = (array)$this->hybridauth->getAdapter($provider)->getUserProfile();
 					} else { // Cannot authenticate user
 						$data['status'] = "User not authenticated.";
 					}
@@ -236,19 +236,7 @@ class Social extends MY_Controller {
 
 	public function endpoint()
 	{
-
-		log_message('debug', 'controllers.HAuth.endpoint called.');
-		log_message('info', 'controllers.HAuth.endpoint: $_REQUEST: '.print_r($_REQUEST, TRUE));
-
-		if ($_SERVER['REQUEST_METHOD'] === 'GET')
-		{
-			log_message('debug', 'controllers.HAuth.endpoint: the request method is GET, copying REQUEST array into GET array.');
-			$_GET = $_REQUEST;
-		}
-
-		log_message('debug', 'controllers.HAuth.endpoint: loading the original HybridAuth endpoint script.');
-		require_once APPPATH.'/third_party/hybridauth/index.php';
-
+		require_once APPPATH . 'third_party/hybridauth/index.php';
 	}
 }
 
