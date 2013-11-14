@@ -2,7 +2,6 @@
 
 require_once APPPATH . 'third_party/geoip/src/geoipcity.inc';
 require_once APPPATH . 'third_party/geoip/src/timezone.php';
-require_once APPPATH . 'third_party/geoip/Geocoder_Result.php';
 
 class Geocoder {
 
