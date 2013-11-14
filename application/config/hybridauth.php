@@ -19,7 +19,7 @@
 
 $config['base_url']   = 'social/endpoint';
 
-$config['debug_mode'] = (ENVIRONMENT === 'development');
+$config['debug_mode'] =  FALSE; //(ENVIRONMENT === 'development');
 
 $config['debug_file'] = APPPATH.'logs/hybridauth.log';
 
