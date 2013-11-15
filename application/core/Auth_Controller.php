@@ -11,22 +11,24 @@ class Auth_Controller extends MY_Controller {
 	protected $ignore_page = array();
 	
 	/**
-	 * [__construct description]
+	 * __construct Auth_Controller
 	 * 
 	 */
 	public function __construct()
 	{
 		parent::__construct();
 
-		$this->_permission();
+		$this->_check_permission();
 	}
 
 	/**
-	 * [permission description]
+	 * Kiem tra quyen han truy cap vao trang.
+	 * Bo qua kiem tra truy cap neu URI trang 
+	 * duoc them vao trong $ignore_page.
 	 * 
-	 * @return [type] [description]
+	 * @return void
 	 */
-	protected function _permission()
+	protected function _check_permission()
 	{
 		if( ! $this->uri->is($this->ignore_page) )
 		{
