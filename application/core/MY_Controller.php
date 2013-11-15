@@ -38,7 +38,29 @@ class MY_Controller extends CI_Controller {
 	{
 		parent::__construct();
 		
-		$this->_initialize();
+		// Auto-load, cau hinh he thong...
+		$this->_autoload();
+
+		// Neu site o che do maintenance
+		$maintenance_detect = '*thongbaomatcap.info*';
+		
+		if( $this->config->item('maintenance_mode') && str_is($maintenance_detect, site_url() ) )
+		{
+			$this->_maintenance_mode();
+		}
+
+		// Thiet lap layout mac dinh
+		if( ! is_null($this->layout) )
+		{
+			$this->template->set_layout($this->layout);
+		}
+
+		// ENVIRONMENT Setup
+		if (ENVIRONMENT == 'development' && ! $this->input->is_ajax_request() )
+		{
+			$this->output->enable_profiler(TRUE);
+		}
+
 	}
 
 	/**
@@ -46,18 +68,8 @@ class MY_Controller extends CI_Controller {
 	 * 
 	 * @return [type] [description]
 	 */
-	protected function _initialize()
+	protected function _autoload()
 	{
-		// Thiet lap layout mac dinh
-		if( ! is_null($this->layout) )
-		{
-			$this->template->set_layout($this->layout);
-		}
-
-		//--------------------------------------------------------------------
-		// Auto-load
-		//--------------------------------------------------------------------
-
 		$data = array(
 			'models'    => 'model',
 			'libraries' => 'library',
@@ -74,16 +86,17 @@ class MY_Controller extends CI_Controller {
 				}
 			}
 		}
+	}
 
-		//--------------------------------------------------------------------
-		// Development Environment Setup
-		//--------------------------------------------------------------------
-
-		if (ENVIRONMENT == 'development')
-		{
-			$this->output->enable_profiler(TRUE);
-		}
-
+	/**
+	 * [maintenance_mode description]
+	 * 
+	 * @return [type] [description]
+	 */
+	protected function _maintenance_mode()
+	{
+		include APPPATH . 'views/maintenance.php';
+		exit();
 	}
 
 }

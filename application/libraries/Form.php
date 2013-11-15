@@ -2,36 +2,78 @@
 
 class Form {
 
+	/**
+	 * [$html description]
+	 * 
+	 * @var [type]
+	 */
 	protected $html;
 
+	/**
+	 * [$uri description]
+	 * 
+	 * @var [type]
+	 */
 	protected $uri;
 
+	/**
+	 * [$security description]
+	 * 
+	 * @var [type]
+	 */
 	protected $security;
 
+	/**
+	 * [$session description]
+	 * 
+	 * @var [type]
+	 */
 	protected $session;
 
+	/**
+	 * [$labels description]
+	 * 
+	 * @var array
+	 */
 	protected $labels = array();
 
+	/**
+	 * [$reserved description]
+	 * 
+	 * @var array
+	 */
 	protected $reserved = array('method', 'url', 'files');
 
+	/**
+	 * [$spoofedMethods description]
+	 * 
+	 * @var array
+	 */
 	protected $spoofedMethods = array('DELETE', 'PATCH', 'PUT');
 
+	/**
+	 * [$skipValueTypes description]
+	 * 
+	 * @var array
+	 */
 	protected $skipValueTypes = array('file', 'password', 'checkbox', 'radio');
 
+	/**
+	 * [__construct description]
+	 * 
+	 */
 	public function __construct()
 	{
 		$CI =& get_instance();
 
-		if( ! isset($CI->html) )
-		{
-			$CI->load->library('html');
-		}
-
+		// Load va khoi tao thu vien
 		foreach (array('session', 'uri', 'html', 'security', 'input') as $lib)
 		{
+			$CI->load->library($lib);
 			$this->{$lib} = $CI->{$lib};
 		}
 
+		// Dua post data vao session 
 		if( $this->input->post() )
 		{
 			$this->session->set_flashdata('old_input', $this->input->post());
@@ -48,19 +90,14 @@ class Form {
 	public function open(array $options = array())
 	{
 		$method = array_get($options, 'method', 'post');
+		$method = strtoupper($method);
 
-		// We need to extract the proper method from the attributes. If the method is
-		// something other than GET or POST we'll use POST since we will spoof the
-		// actual method since forms don't support the reserved methods in HTML.
-		$attributes['method'] = $this->getMethod($method);
+		$attributes['method'] = $method != 'GET' ? 'POST' : $method;
 
-		$attributes['action'] = $this->getAction($options);
+		$attributes['action'] = isset($options['url']) ? site_url($options['url']) : current_url();
 
 		$attributes['accept-charset'] = 'UTF-8';
 
-		// If the method is PUT, PATCH or DELETE we will need to add a spoofer hidden
-		// field that will instruct the Symfony request to pretend the method is a
-		// different method than it actually is, for convenience from the forms.
 		$append = $this->getAppendage($method);
 
 		if (isset($options['files']) and $options['files'])
@@ -68,17 +105,11 @@ class Form {
 			$options['enctype'] = 'multipart/form-data';
 		}
 
-		// Finally we're ready to create the final form HTML field. We will attribute
-		// format the array of attributes. We will also add on the appendage which
-		// is used to spoof requests for this PUT, PATCH, etc. methods on forms.
 		$attributes = array_merge(
 			$attributes,
 			array_except($options, $this->reserved)
 		);
 
-		// Finally, we will concatenate all of the attributes into a single string so
-		// we can build out the final form open statement. We'll also append on an
-		// extra value for the hidden _method field if it's needed for the form.
 		$attributes = $this->html->attributes($attributes);
 
 		return '<form'.$attributes.'>'.$append;
@@ -123,21 +154,9 @@ class Form {
 
 		$options = $this->html->attributes($options);
 
-		$value = $this->formatLabel($name, $value);
+		$value = $value ?: ucwords(str_replace('_', ' ', $name));
 
 		return '<label for="'.$name.'"'.$options.'>'.$value.'</label>';
-	}
-
-	/**
-	 * Format the label value.
-	 *
-	 * @param  string  $name
-	 * @param  string|null  $value
-	 * @return string
-	 */
-	protected function formatLabel($name, $value)
-	{
-		return $value ?: ucwords(str_replace('_', ' ', $name));
 	}
 
 	/**
@@ -153,9 +172,6 @@ class Form {
 	{
 		if ( ! isset($options['name'])) $options['name'] = $name;
 
-		// We will get the appropriate value for the given field. We will look for the
-		// value in the session for the value in the old input data then we'll look
-		// in the model instance if one is set. Otherwise we will just use empty.
 		$id = $this->getIdAttribute($name, $options);
 
 		if ( ! in_array($type, $this->skipValueTypes))
@@ -163,9 +179,6 @@ class Form {
 			$value = $this->getValueAttribute($name, $value);
 		}
 
-		// Once we have the type, value, and ID we can marge them into the rest of the
-		// attributes array so we can convert them into their HTML attribute format
-		// when creating the HTML element. Then, we will return the entire input.
 		$merge = compact('type', 'value', 'id');
 
 		$options = array_merge($options, $merge);
@@ -655,35 +668,6 @@ class Form {
 	}
 
 	/**
-	 * Parse the form action method.
-	 *
-	 * @param  string  $method
-	 * @return string
-	 */
-	protected function getMethod($method)
-	{
-		$method = strtoupper($method);
-
-		return $method != 'GET' ? 'POST' : $method;
-	}
-
-	/**
-	 * Get the form action from the options.
-	 *
-	 * @param  array   $options
-	 * @return string
-	 */
-	protected function getAction(array $options)
-	{
-		if (isset($options['url']))
-		{
-			return site_url($options['url']);
-		}
-
-		return current_url();
-	}
-
-	/**
 	 * Get the form appendage for the given method.
 	 *
 	 * @param  string  $method
@@ -749,7 +733,6 @@ class Form {
 		}
 
 		if ( ! is_null($value)) return $value;
-
 	}
 
 	/**
@@ -762,11 +745,12 @@ class Form {
 	{
 		$old_input = $this->session->flashdata('old_input');
 
-		if( $this->input->input('post')->has($name) )
+		if( $this->input->post($name) )
 		{
-			return $this->input->input('post')->get($name);
+			return $this->input->post($name);
 		}
-		elseif( isset($old_input[$name]) )
+		
+		if( isset($old_input[$name]) )
 		{
 			return array_get($old_input, $this->transformKey($name));
 		}

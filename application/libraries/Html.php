@@ -3,40 +3,14 @@
 class Html {
 
 	/**
-	 * The URL generator instance.
-	 *
-	 * @var \Illuminate\Routing\UrlGenerator
-	 */
-	protected $url;
-
-	/**
-	 * The registered html macros.
-	 *
-	 * @var array
-	 */
-	protected $macros;
-
-	/**
 	 * Create a new HTML builder instance.
 	 *
-	 * @param  \Illuminate\Routing\UrlGenerator  $url
 	 * @return void
 	 */
 	public function __construct()
 	{
-		// $this->url = $url;
-	}
-
-	/**
-	 * Register a custom HTML macro.
-	 *
-	 * @param  string    $name
-	 * @param  callable  $macro
-	 * @return void
-	 */
-	public function macro($name, $macro)
-	{
-		$this->macros[$name] = $macro;
+		$CI =& get_instance();
+		$CI->load->helper('url');
 	}
 
 	/**
@@ -47,7 +21,7 @@ class Html {
 	 */
 	public function entities($value)
 	{
-		return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
+		return htmlentities($value, ENT_QUOTES, 'UTF-8', FALSE);
 	}
 
 	/**
@@ -70,7 +44,7 @@ class Html {
 	 */
 	public function script($url, $attributes = array())
 	{
-		$attributes['src'] = $this->url->asset($url);
+		$attributes['src'] = base_url($url);
 
 		return '<script'.$this->attributes($attributes).'></script>'.PHP_EOL;
 	}
@@ -88,7 +62,7 @@ class Html {
 
 		$attributes = $attributes + $defaults;
 
-		$attributes['href'] = $this->url->asset($url);
+		$attributes['href'] = base_url($url);
 
 		return '<link'.$this->attributes($attributes).'>'.PHP_EOL;
 	}
@@ -101,11 +75,11 @@ class Html {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public function image($url, $alt = null, $attributes = array())
+	public function image($url, $alt = NULL, $attributes = array())
 	{
 		$attributes['alt'] = $alt;
 
-		return '<img src="'.$this->url->asset($url).'"'.$this->attributes($attributes).'>';
+		return '<img src="'.base_url($url).'"'.$this->attributes($attributes).'>';
 	}
 
 	/**
@@ -114,86 +88,15 @@ class Html {
 	 * @param  string  $url
 	 * @param  string  $title
 	 * @param  array   $attributes
-	 * @param  bool    $secure
 	 * @return string
 	 */
-	public function link($url, $title = null, $attributes = array(), $secure = null)
+	public function link($url, $title = NULL, $attributes = array())
 	{
-		$url = $this->url->to($url, array(), $secure);
+		$url = site_url($url);
 
-		if (is_null($title) or $title === false) $title = $url;
+		if (is_null($title) or $title === FALSE) $title = $url;
 
 		return '<a href="'.$url.'"'.$this->attributes($attributes).'>'.$this->entities($title).'</a>';
-	}
-
-	/**
-	 * Generate a HTTPS HTML link.
-	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public function secureLink($url, $title = null, $attributes = array())
-	{
-		return $this->link($url, $title, $attributes, true);
-	}
-
-	/**
-	 * Generate a HTML link to an asset.
-	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @param  bool    $secure
-	 * @return string
-	 */
-	public function linkAsset($url, $title = null, $attributes = array(), $secure = null)
-	{
-		$url = $this->url->asset($url, $secure);
-
-		return $this->link($url, $title ?: $url, $attributes, $secure);
-	}
-
-	/**
-	 * Generate a HTTPS HTML link to an asset.
-	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public function linkSecureAsset($url, $title = null, $attributes = array())
-	{
-		return $this->linkAsset($url, $title, $attributes, true);
-	}
-
-	/**
-	 * Generate a HTML link to a named route.
-	 *
-	 * @param  string  $name
-	 * @param  string  $title
-	 * @param  array   $parameters
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public function linkRoute($name, $title = null, $parameters = array(), $attributes = array())
-	{
-		return $this->link($this->url->route($name, $parameters), $title, $attributes);
-	}
-
-	/**
-	 * Generate a HTML link to a controller action.
-	 *
-	 * @param  string  $action
-	 * @param  string  $title
-	 * @param  array   $parameters
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public function linkAction($action, $title = null, $parameters = array(), $attributes = array())
-	{
-		return $this->link($this->url->action($action, $parameters), $title, $attributes);
 	}
 
 	/**
@@ -204,7 +107,7 @@ class Html {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	public function mailto($email, $title = null, $attributes = array())
+	public function mailto($email, $title = NULL, $attributes = array())
 	{
 		$email = $this->email($email);
 
